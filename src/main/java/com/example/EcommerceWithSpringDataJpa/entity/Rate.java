@@ -57,7 +57,7 @@ public class Rate {
         this.customer = customer;
     }
     @JoinColumn(name = "product_id")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     public Product getProduct() {
         return product;
     }

@@ -5,6 +5,7 @@ import com.example.EcommerceWithSpringDataJpa.entity.Product;
 import com.example.EcommerceWithSpringDataJpa.repository.product.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -29,8 +30,8 @@ public class ProductServiceImpl implements ProductService {
         if(product==null){
             throw new NullPointerException();
         }
-        if(productRepository.getProductByName(product.getName())!=null)
-            throw new IllegalArgumentException("name already exists");
+       // if(productRepository.getByName(product.getName())!=null)
+          //  throw new IllegalArgumentException("name already exists");
         product.setName(product.getName().toLowerCase());
         productRepository.save(product);
     }
@@ -39,15 +40,17 @@ public class ProductServiceImpl implements ProductService {
      * @InheritedDoc
      */
     @Override
-    public void updateProduct(Product product) {
+    public void updateProduct(Product product) {//updates all except category
 
         if(product==null){
             throw new NullPointerException();
         }
-        if(productRepository.findById(product.getId())==null) {
+        Optional<Product> productFromDb=productRepository.findById(product.getId());
+        if(!productFromDb.isPresent()) {
             throw new NoSuchElementException("product doesn't exist");
         }
         product.setName(product.getName().toLowerCase());
+        product.setCategory(productFromDb.get().getCategory());
         productRepository.save(product);
     }
 
@@ -55,12 +58,22 @@ public class ProductServiceImpl implements ProductService {
      * @InheritedDoc
      */
     @Override
-    public void deleteProduct(Product product) {
+    public void deleteProductById(Long productId) {
+        if(productId <= -1)
+            throw new IllegalArgumentException("invalid id");
+        Optional<Product> product=productRepository.findById(productId);
+        if(!product.isPresent())
+            throw new NoSuchElementException("no product with the given id");
+        deleteProduct(product.get());
+
+    }
+
+    private void deleteProduct(Product product) {
         if(product==null){
             throw new NullPointerException();
         }
 
-       productRepository.delete(product);
+        productRepository.delete(product);
     }
 
 
@@ -68,10 +81,11 @@ public class ProductServiceImpl implements ProductService {
     /**
      * @InheritedDoc
      */
+    @Transactional
     @Override
     public void updateProductQuantity(Long productId, int quantity) {
-        if(productId<0 || quantity<0){
-            throw new IllegalArgumentException();
+         if(productId<0 || quantity<0){
+            throw new IllegalArgumentException("invalid product or quantity");
         }
         Optional<Product> product=productRepository.findById(productId);
         if(!product.isPresent())

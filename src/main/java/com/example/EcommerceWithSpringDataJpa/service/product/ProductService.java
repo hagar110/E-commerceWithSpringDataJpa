@@ -33,7 +33,7 @@ public interface ProductService {
      * @param product product object to be deleted
      * @Return nothing
      */
-    void deleteProduct(Product product);
+    void deleteProductById(Long productId);
 
 
     /**

@@ -5,10 +5,7 @@ import com.example.EcommerceWithSpringDataJpa.entity.Category;
 import com.example.EcommerceWithSpringDataJpa.model.Response;
 import com.example.EcommerceWithSpringDataJpa.service.category.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-
 import javax.ws.rs.QueryParam;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -66,7 +63,7 @@ public class CategoryController {
         return new Response<>("Ok",200,categories);
 
     }
-  /*  @GetMapping(path="/{name}")
+    @GetMapping(path="/name/{name}")
     public Response<Category> getCategoryByName(@PathVariable("name") String name){
         Category category;
         try {
@@ -82,7 +79,7 @@ public class CategoryController {
         return new Response<>("Ok",200,category);
 
     }
-    */@PostMapping
+    @PostMapping
     public Response addCategory(@RequestBody Category category){
         try {
             categoryService.addCategory(category);
@@ -108,13 +105,16 @@ public class CategoryController {
         }
         return new Response("Ok",200,null);
     }
-    @DeleteMapping
-    public Response deleteCategory(@RequestBody Category category){
+    @DeleteMapping("/{id}")
+    public Response deleteCategory(@PathVariable Long id){
         try {
-            categoryService.removeCategory(category);
+            categoryService.removeCategoryById(id);
         }
-        catch (NullPointerException e){
-            return new Response("Bad request",400,null);
+        catch (IllegalArgumentException e) {
+            return new Response(e.getMessage(), 400, null);
+        }
+        catch (NoSuchElementException e){
+            return new Response(e.getMessage(),404,null);
         }
 
         return new Response("Ok",200,null);

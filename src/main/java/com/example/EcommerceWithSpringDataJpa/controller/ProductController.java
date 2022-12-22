@@ -36,7 +36,7 @@ public class ProductController {
             return new Response("illegal category",400,null);
         }
 
-        return new Response("Ok",200,null);
+        return new Response("Ok",200,products);
     }
     @GetMapping("/search")
     public Response<List<Product>> searchProductByName(@QueryParam("name") String name){
@@ -55,16 +55,16 @@ public class ProductController {
 
     }
 
-    @PutMapping
+    @PutMapping("/quantity")
     public Response updateProductQuantity(@RequestBody ProductDto productDto){
         try {
-            productService.getProductById(productDto.getProductId());
+            productService.updateProductQuantity(productDto.getProductId(),productDto.getQuantity());
         }
         catch (NoSuchElementException e){
             return new Response(e.getMessage(),404,null);
         }
         catch (IllegalArgumentException e){
-            return new Response(e.getMessage(),400,null);
+           return new Response(e.getMessage(),400,null);
         }
 
         return new Response<>("Ok",200,null);
@@ -111,10 +111,13 @@ public class ProductController {
         }
         return new Response("Ok",200,null);
     }
-    @DeleteMapping
-    public Response deleteProduct(@RequestBody Product product){
+    @DeleteMapping("/{id}")
+    public Response deleteProduct(@PathVariable Long id){
         try {
-            productService.deleteProduct(product);
+            productService.deleteProductById(id);
+        }
+        catch (IllegalArgumentException e){
+            return new Response(e.getMessage(),400,null);
         }
         catch (NullPointerException e){
             return new Response("Bad request",400,null);

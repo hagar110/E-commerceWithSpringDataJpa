@@ -31,11 +31,7 @@ public class CategoryServiceImplementation implements CategoryService{
         if(repository.getCategoryByName(category.getName())!=null)
            throw new IllegalArgumentException("name already exists");
         repository.save(category);
-     /*   if(repository.getCategoryByName(category.getName()).getObjectToBeReturned()!=null)
-            return new Response<>("category already exists", 400, true, true);
-
-       return  repository.addCategory(category);
-    */}
+   }
 
     /**
      * @InheritedDoc
@@ -55,7 +51,17 @@ public class CategoryServiceImplementation implements CategoryService{
      * @InheritedDoc
      */
     @Override
-    public void removeCategory(Category category) {
+    public void removeCategoryById(Long categoryId) {
+        if(categoryId <= -1)
+            throw new IllegalArgumentException();
+        Optional<Category> category=repository.findById(categoryId);
+        if(!category.isPresent())
+            throw new NoSuchElementException("no category with the given id");
+        deleteCategory(category.get());
+        //  return repository.removeCategory(category);
+    }
+
+    private void deleteCategory(Category category) {
         if(category == null)
             throw new NullPointerException();
         repository.delete(category);

@@ -1,6 +1,8 @@
 package com.example.EcommerceWithSpringDataJpa.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -18,6 +20,7 @@ public class Product {
     private String name;
     private String imagePath;
     private double price;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 
     private Category category;
 
@@ -116,7 +119,7 @@ public class Product {
     public void setPrice(double price) {
         this.price = price;
     }
-
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     public Category getCategory() {
