@@ -64,6 +64,7 @@ public class OrderServiceImp implements OrderService{
             double totalOrderPrice=0;
             Order order = new Order();
             for (ShoppingCartProducts CartItem: shoppingCartItems) {
+                System.out.println("*************************************" +CartItem.getId()+ "*************************************");
                 Product product= productRepository.getById(CartItem.getProduct().getId());
                 //check if required Qty is available in stock
                 if(CartItem.getProductQuantity()<=product.getAvailableQuantity()){
@@ -71,7 +72,7 @@ public class OrderServiceImp implements OrderService{
                     OrderDetails orderItem = new OrderDetails(order, CartItem.getProduct(), CartItem.getProductQuantity());
                     orderDetailsList.add(orderItem);
                     //remove shopping cart
-                    shoppingCartRepository.delete(CartItem);
+                    shoppingCartRepository.deleteById(CartItem.getId());
                     //decrease product available Qty
                     product.setAvailableQuantity(product.getAvailableQuantity()-CartItem.getProductQuantity());
                     //calculate total order price
