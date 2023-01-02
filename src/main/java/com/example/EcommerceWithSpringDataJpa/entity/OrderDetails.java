@@ -13,7 +13,6 @@ import javax.validation.constraints.NotNull;
 @Setter
 @Getter
 @ToString
-@Table(name="order_details")
 public class OrderDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,5 +33,11 @@ public class OrderDetails {
     public OrderDetails(Order order,int productQuantity) {
         this.order = order;
         this.productQuantity = productQuantity;
+    }
+
+    public OrderDetails(Order order,Product product ,int productQuantity) {
+        this.order = order;
+        this.productQuantity = productQuantity;
+        this.product=product;
     }
 }

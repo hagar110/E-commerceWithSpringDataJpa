@@ -1,9 +1,6 @@
 package com.example.EcommerceWithSpringDataJpa.entity;
-
-
 import com.example.EcommerceWithSpringDataJpa.enums.OrderStatus;
 import lombok.*;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -44,5 +41,4 @@ public class Order{
         this.status = status;
         this.total = total;
     }
-
 }

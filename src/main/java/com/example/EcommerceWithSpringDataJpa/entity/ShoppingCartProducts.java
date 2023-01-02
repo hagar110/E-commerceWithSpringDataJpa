@@ -1,17 +1,53 @@
 package com.example.EcommerceWithSpringDataJpa.entity;
 
-import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
-@Setter
-@Getter
-@ToString
+@Table(name = "ShoppingCartProducts")
 public class ShoppingCartProducts {
+    public ShoppingCartProducts() {
+    }
+
+    public ShoppingCartProducts(int id, int productQuantity, Product product, User user) {
+        this.id = id;
+        this.productQuantity = productQuantity;
+        this.product = product;
+        this.user = user;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setProductQuantity(int productQuantity) {
+        this.productQuantity = productQuantity;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public int getProductQuantity() {
+        return productQuantity;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public User getUser() {
+        return user;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
